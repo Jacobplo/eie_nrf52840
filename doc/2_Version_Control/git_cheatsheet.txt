@@ -1,0 +1,35 @@
+git commit
+  Used to confirm changes that have been made, after they have been staged with git add, and saving them in the local repo
+  git commit -m "message";
+  
+git branch
+  Creates a separately tracked branch, which you can make commits on, that are kept separate from other branches. This is good for making changes that might not work, so that main still works.
+  git branch branchName
+
+git checkout
+  Switches the branch that the user is currently on to the one chosen, so that the user can make changes on that branch.
+  git checkout branchName
+  Use with -b to create a branch before switching to it.
+
+git pull
+  Copies the locally untracked commits from the remote repo to the local repo.
+  git pull -u origin branchName
+
+git push
+  Copies the remotely untracked commits from the local repo to the remote repo.
+  git push -u origin branchName
+
+git merge
+  Merges all of the commits from one branch into another.
+  If on branch1, use the command to merge changes from branch2.
+  git merge branch2;
+
+git rebase
+  Like merge, but instead moves the commits of another branch directly to the current branch, while the current branch still points to where it originally did.
+  git rebase branch2;
+
+git fetch
+  Pulls commits from the remote repo without changing where the local branches point do. Commits are only downloaded, and not merged.
+  git fetch;
+
+
