@@ -1,3 +1,7 @@
+git add
+  Stages changes to be committed. Used for controlling what is going to be committed.
+  git add {directory or file}
+
 git commit
   Used to confirm changes that have been made, after they have been staged with git add, and saving them in the local repo
   git commit -m "message";
@@ -18,6 +22,8 @@ git pull
 git push
   Copies the remotely untracked commits from the local repo to the remote repo.
   git push -u origin branchName
+  After initial push of a new branch:
+    git push;
 
 git merge
   Merges all of the commits from one branch into another.
@@ -31,5 +37,17 @@ git rebase
 git fetch
   Pulls commits from the remote repo without changing where the local branches point do. Commits are only downloaded, and not merged.
   git fetch;
+
+git status
+  Shows what has and has not yet been staged for commit.
+  git status
+
+git log
+  Shows commit history for different branches, including author, date, branch, and where the HEAD is located.
+  git log
+
+git diff
+  Shows all changes in files that have been made that haven't yet been staged.
+  git diff
 
 
