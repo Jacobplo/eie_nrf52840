@@ -16,13 +16,12 @@ static const struct gpio_dt_spec led3 = GPIO_DT_SPEC_GET(LED3_NODE, gpios);
 int main(void) {
   int ret;
 
-  if(!(gpio_is_ready_dt(&led0) && gpio_is_ready_dt(&led1) && gpio_is_ready_dt(&led2) && gpio_is_ready_dt(&led3))) {
-    return -1;
-  }
- 
   // Activate all LED pins.
   struct gpio_dt_spec const static pins[] = {led0, led1, led2, led3};
-  for(int8_t i = 0; i < 4; i++) {
+  size_t size_pins = sizeof(pins) / sizeof(pins[0]);
+  for(int8_t i = 0; i < size_pins; i++) {
+    if(!gpio_is_ready_dt(&pins[i])) return -1;
+
     ret = gpio_pin_configure_dt(&pins[i], GPIO_OUTPUT_ACTIVE);
     if(ret < 0) {
       return ret;
