@@ -57,6 +57,9 @@ static const struct bt_data ble_scan_response_data[] = {
 static uint8_t ble_custom_characteristic_user_data[BLE_CUSTOM_CHARACTERISTIC_MAX_DATA_LENGTH + 1] =
     {'E', 'i', 'E'};
 
+
+static enum led_state_t led1_state = LED_OFF;
+
 /* BLE SERVICE SETUP ---------------------------------------------------------------------------- */
 
 BT_GATT_SERVICE_DEFINE(
@@ -86,7 +89,16 @@ static ssize_t ble_custom_service_read(struct bt_conn* conn, const struct bt_gat
                                        void* buf, uint16_t len, uint16_t offset) {
   // Send the data that is stored in the characteristic ("EiE" by default, can change if written to)
   // by fetching it directly from the characteristic object
-  const char* data_to_send_to_connected_device = attr->user_data;
+  // const char* data_to_send_to_connected_device = attr->user_data;
+
+  char* data_to_send_to_connected_device;
+  if(led1_state == LED_ON) {
+    data_to_send_to_connected_device = "ON";
+  }
+  if(led1_state == LED_OFF) {
+    data_to_send_to_connected_device = "OFF";
+  }
+
 
   return bt_gatt_attr_read(conn, attr, buf, len, offset, data_to_send_to_connected_device,
                            strlen(data_to_send_to_connected_device));
@@ -111,8 +123,14 @@ static ssize_t ble_custom_service_write(struct bt_conn* conn, const struct bt_ga
   }
   printk("\n");
 
-  if(strcmp(value, "LED ON") == 0) LED_set(LED0, LED_ON); 
-  if(strcmp(value, "LED OFF") == 0) LED_set(LED0, LED_OFF);
+  if(strcmp(value, "LED ON") == 0) {
+    LED_set(LED0, LED_ON);
+    led1_state = LED_ON;
+  }
+  if(strcmp(value, "LED OFF") == 0) {
+    LED_set(LED0, LED_OFF);
+    led1_state = LED_OFF;
+  }
 
   return len;
 }
@@ -126,6 +144,7 @@ static void ble_custom_service_notify() {
 }
 
 /* MAIN ----------------------------------------------------------------------------------------- */
+
 
 int main(void) {
   int err = bt_enable(NULL);
