@@ -4,6 +4,7 @@
 
 /* IMPORTS -------------------------------------------------------------------------------------- */
 
+#include "BTN.h"
 #include "LED.h"
 #include <stdio.h>
 #include <string.h>
@@ -119,7 +120,9 @@ static ssize_t ble_custom_service_write(struct bt_conn* conn, const struct bt_ga
 static void ble_custom_service_notify() {
   static uint32_t counter = 0;
   bt_gatt_notify(NULL, &ble_custom_service.attrs[2], &counter, sizeof(counter));
-  counter++;
+  static int8_t increment = 1;
+  if(BTN_check_clear_pressed(BTN0)) increment *= -1;
+  counter += increment;
 }
 
 /* MAIN ----------------------------------------------------------------------------------------- */
@@ -134,7 +137,11 @@ int main(void) {
   }
 
   if(LED_init() < 0) {
-    printk("LED's failed to initialize.\n");
+    printk("LED_init(): failed to initialize.\n");
+  }
+
+  if(BTN_init() < 0) {
+    printk("BTN_init(): failed to initialize.\n");
   }
 
   err =
