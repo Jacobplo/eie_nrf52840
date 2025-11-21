@@ -4,7 +4,9 @@
 
 /* IMPORTS -------------------------------------------------------------------------------------- */
 
+#include "LED.h"
 #include <stdio.h>
+#include <string.h>
 #include <string.h>
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/conn.h>
@@ -108,6 +110,9 @@ static ssize_t ble_custom_service_write(struct bt_conn* conn, const struct bt_ga
   }
   printk("\n");
 
+  if(strcmp(value, "LED ON") == 0) LED_set(LED0, LED_ON); 
+  if(strcmp(value, "LED OFF") == 0) LED_set(LED0, LED_OFF);
+
   return len;
 }
 
@@ -126,6 +131,10 @@ int main(void) {
     return 0;
   } else {
     printk("Bluetooth initialized!\n");
+  }
+
+  if(LED_init() < 0) {
+    printk("LED's failed to initialize.\n");
   }
 
   err =
