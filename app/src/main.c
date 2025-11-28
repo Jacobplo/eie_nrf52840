@@ -83,19 +83,19 @@ BT_GATT_SERVICE_DEFINE(
   BT_GATT_PRIMARY_SERVICE(&ble_custom_service_uuid),
   BT_GATT_CHARACTERISTIC(
     &ble_custom_characteristic_uuid.uuid,
-    BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
-    BT_GATT_PERM_READ | BT_GATT_PERM_WRITE,
+    BT_GATT_CHRC_WRITE,
+    BT_GATT_PERM_WRITE,
     ble_custom_characteristic_read_cb,
     ble_custom_characteristic_write_cb,
     ble_custom_characteristic_user_data
   ),
   BT_GATT_CHARACTERISTIC(
     &ble_characteristic_two_uuid.uuid,
-    BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
-    BT_GATT_PERM_READ | BT_GATT_PERM_WRITE,
+    BT_GATT_CHRC_READ,
+    BT_GATT_PERM_READ,
     ble_characteristic_two_read_cb,
     ble_characteristic_two_write_cb,
-    ble_characteristic_two_user_data
+    ble_custom_characteristic_user_data
   )
 );
 
