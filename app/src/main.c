@@ -17,7 +17,7 @@
 #include "zephyr/bluetooth/att.h"
 #include "zephyr/bluetooth/gap.h"
 
-#define SLEEP_MS 1
+#define SLEEP_MS 1000
 
 
 // BLE
@@ -78,6 +78,8 @@ static ssize_t ble_characteristic_two_write_cb(struct bt_conn *conn, const struc
   return len;
 }
 
+
+
 BT_GATT_SERVICE_DEFINE(
   ble_custom_service,
   BT_GATT_PRIMARY_SERVICE(&ble_custom_service_uuid),
@@ -91,13 +93,25 @@ BT_GATT_SERVICE_DEFINE(
   ),
   BT_GATT_CHARACTERISTIC(
     &ble_characteristic_two_uuid.uuid,
-    BT_GATT_CHRC_READ,
+    BT_GATT_CHRC_READ | BT_GATT_CHRC_NOTIFY,
     BT_GATT_PERM_READ,
     ble_characteristic_two_read_cb,
     ble_characteristic_two_write_cb,
     ble_custom_characteristic_user_data
   )
 );
+
+static void ble_cheese_notify() {
+  static uint32_t counter = 0;
+  static char value[20] = "Cheese";
+  int char_index = strlen(value);
+  for(int i = counter; i > 0; i /= 10) {
+    value[char_index] = (i % 10) - '0';
+  }
+  value[char_index] = '\0';
+  bt_gatt_notify(NULL, &ble_custom_service.attrs[3], value, sizeof(value));
+  counter++;
+}
 
 int main(void) {
 
@@ -121,6 +135,7 @@ int main(void) {
   }
 
   while(1) {
+    ble_cheese_notify();
     k_msleep(SLEEP_MS);
   }
 	return 0;
