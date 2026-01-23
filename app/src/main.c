@@ -84,6 +84,24 @@ int main(void) {
   lcd_cmd(CMD_DISPLAY_ON, NULL);
 
 
+  uint8_t column_data[] = { 0x00, 0x95, 0x00, 0x9f };
+  uint8_t row_data[]    = { 0x00, 0x75, 0x00, 0x7f };
+  uint8_t color_data[300];
+  for(int i = 0; i < 300; i += 3) {
+    color_data[i] = 0xFC;       // Blue
+    color_data[i + 1] = 0xFC;   // Green
+    color_data[i + 2] = 0xFC;   // Red
+  }
+  struct spi_buf column_data_buf = {.buf=column_data, .len=4};
+  struct spi_buf row_data_buf = {.buf=row_data, .len=4};
+  struct spi_buf color_data_buf = {.buf=color_data, .len=300};
+
+
+  lcd_cmd(CMD_COLUMN_ADDRESS_SET, &column_data_buf);
+  lcd_cmd(CMD_ROW_ADDRESS_SET, &row_data_buf);
+  lcd_cmd(CMD_MEMORY_WRITE, &color_data_buf);
+
+
   while(1) {
     k_msleep(SLEEP_MS);
   }
