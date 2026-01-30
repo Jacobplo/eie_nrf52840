@@ -12,11 +12,13 @@
 
 #include "BTN.h"
 #include "LED.h"
+#include "core/lv_obj_event.h"
 #include "core/lv_obj_pos.h"
 #include "display/lv_display.h"
 #include "lv_data_obj.h"
 #include "misc/lv_area.h"
 #include "misc/lv_color.h"
+#include "misc/lv_event.h"
 #include "misc/lv_timer.h"
 #include "widgets/button/lv_button.h"
 #include "widgets/label/lv_label.h"
@@ -28,6 +30,12 @@
 static const struct device *display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
 static lv_obj_t *screen = NULL;
 
+void lv_button_callback(lv_event_t *event) {
+  lv_obj_t *data_obj = (lv_obj_t *)lv_event_get_user_data(event);
+  led_id led = *(led_id *)lv_data_obj_get_data_ptr(data_obj);
+
+  LED_toggle(led);
+}
 
 
 int main(void) {
@@ -65,6 +73,11 @@ int main(void) {
     snprintf(label_text, 10, "LED %d", i);
     lv_label_set_text(button_label, label_text);
     lv_obj_align(button_label, LV_ALIGN_CENTER, 0, 0);
+
+    // Event callback
+    led_id led = (led_id)i;
+    lv_obj_t *data_obj = lv_data_obj_create_alloc_assign(ui_btn, &led, sizeof(led));
+    lv_obj_add_event_cb(ui_btn, lv_button_callback, LV_EVENT_CLICKED, data_obj);
   }
 
   
